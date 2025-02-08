@@ -53,7 +53,7 @@ contract TicketFactory {
         return getTicketsIdFromAddress(msg.sender);
     }
 
-    function getMyTickets(uint256 _ticketId) public view returns (myPet memory) {
+    function getMyTickets(uint256 _ticketId) public view returns (myTicket memory) {
         require(_owners[_ticketId] == msg.sender, "You don't own this pet");
         return _myTickets[_ticketId];
     }
