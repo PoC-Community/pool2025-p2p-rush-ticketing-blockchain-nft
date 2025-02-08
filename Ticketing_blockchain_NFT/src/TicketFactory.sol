@@ -22,21 +22,21 @@ contract TicketFactory {
     }
 
     function _createTicket() internal returns (uint256) {
-        require(_ticketCount[msg.sender] < 3, "You can't have more than 3 tickets");
-    
+        require(_ticketCount[msg.sender] < 2, "You can't have more than 1 tickets");
+
         uint256 newTicketId = _myTickets.length;
-    
+
         myTicket memory newTicket = myTicket({
             event_name: _myTickets[0].event_name,
             location: _myTickets[0].location,
             id: newTicketId,
             date: _myTickets[0].date
         });
-    
+
         _myTickets.push(newTicket);
         _owners[newTicketId] = msg.sender;
         _ticketCount[msg.sender]++;
-    
+
         return newTicketId;
     }
 

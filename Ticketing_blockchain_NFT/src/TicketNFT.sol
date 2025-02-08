@@ -60,12 +60,22 @@ contract TicketNFT is TicketFactory, IERC721 {
     }
 
     function mint() public {
-        require(_ticketCount[msg.sender] < 5, "You can't have more than 5 tickets");
+        require(_ticketCount[msg.sender] < 2, "You can't have more than 1 tickets");
 
         uint256 ticketId = _createTicket();
         _owners[ticketId] = msg.sender;
 
         emit Transfer(address(0), msg.sender, ticketId);
+    }
+
+    function getFirstOwnedTicket() public view returns (uint256) {
+        uint256[] memory tickets = getTicketsIdFromAddress(msg.sender);
+
+        if (tickets.length > 0) {
+            return tickets[0];
+        } else {
+            return type(uint256).max;
+        }
     }
 
 }
