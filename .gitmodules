@@ -1,3 +1,6 @@
 [submodule "Ticketing_blockchain_NFT/lib/forge-std"]
 	path = Ticketing_blockchain_NFT/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "Ticketing_blockchain_NFT/lib/openzeppelin-contracts"]
+	path = Ticketing_blockchain_NFT/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
