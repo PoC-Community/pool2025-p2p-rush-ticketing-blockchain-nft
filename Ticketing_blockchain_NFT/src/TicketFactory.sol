@@ -14,25 +14,30 @@ contract TicketFactory {
     mapping(address => uint256) _ticketCount;
     address public owner;
 
-    constructor(string memory _defaultLocation, string memory _defaultName, uint _defaultID, uint _defaultDate) {
+    constructor(string memory _defaultLocation, string memory _defaultName, uint _defaultDate) {
         owner = msg.sender;
-
-        _myTickets.push(myTicket(_defaultLocation, _defaultName, _defaultID, _defaultDate));
+        _myTickets[0].event_name = _defaultName;
+        _myTickets[0].location = _defaultLocation;
+        _myTickets[0].date = _defaultDate;
     }
 
     function _createTicket() internal returns (uint256) {
-        require(_ticketCount[msg.sender] <= 3, "You can't have more than 3 pets");
-
-        myTicket memory newTicket;
-        newTicket.event_name = _myTickets[0].event_name;
-        newTicket.location = _myTickets[0].location;
-
+        require(_ticketCount[msg.sender] < 3, "You can't have more than 3 tickets");
+    
         uint256 newTicketId = _myTickets.length;
+    
+        myTicket memory newTicket = myTicket({
+            event_name: _myTickets[0].event_name,
+            location: _myTickets[0].location,
+            id: newTicketId,
+            date: _myTickets[0].date
+        });
+    
         _myTickets.push(newTicket);
         _owners[newTicketId] = msg.sender;
         _ticketCount[msg.sender]++;
-
-        return (newTicketId);
+    
+        return newTicketId;
     }
 
     function getTicketsIdFromAddress(address _owner) public view returns (uint256[] memory) {
@@ -54,7 +59,7 @@ contract TicketFactory {
     }
 
     function getMyTickets(uint256 _ticketId) public view returns (myTicket memory) {
-        require(_owners[_ticketId] == msg.sender, "You don't own this pet");
+        require(_owners[_ticketId] == msg.sender, "You don't own this tickets");
         return _myTickets[_ticketId];
     }
 }
