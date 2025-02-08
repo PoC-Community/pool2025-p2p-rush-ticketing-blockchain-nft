@@ -2,8 +2,9 @@
 pragma solidity ^0.8.20;
 
 import "./TicketNFT.sol";
-import "./IERC721Metadata.sol";
-import "../lib/openzeppelin-contracts/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract TicketNFTMetadata is TicketNFT, IERC721Metadata {
     string private _name;
