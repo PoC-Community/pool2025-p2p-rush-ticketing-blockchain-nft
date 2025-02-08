@@ -1,0 +1,3 @@
+[submodule "Ticketing_blockchain_NFT/lib/forge-std"]
+	path = Ticketing_blockchain_NFT/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
