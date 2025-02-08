@@ -3,7 +3,7 @@ pragma solidity ^0.8.20;
 
 import "./TicketNFT.sol";
 import "./IERC721Metadata.sol";
-import "./node_modules/@openzeppelin/contracts/utils/Strings.sol";
+import "../lib/openzeppelin-contracts/contracts/utils/Strings.sol";
 
 contract TicketNFTMetadata is TicketNFT, IERC721Metadata {
     string private _name;
@@ -13,13 +13,11 @@ contract TicketNFTMetadata is TicketNFT, IERC721Metadata {
     constructor(
         string memory defaultLocation,
         string memory defaultName,
-        uint defaultID,
         uint defaultDate,
-        string memory name_,
         string memory symbol_,
         string memory baseURI_
-    ) TicketNFT(defaultLocation, defaultName, defaultID, defaultDate) {
-        _name = name_;
+    ) TicketNFT(defaultLocation, defaultName, defaultDate) {
+        _name = defaultName;
         _symbol = symbol_;
         _baseURI = baseURI_;
     }

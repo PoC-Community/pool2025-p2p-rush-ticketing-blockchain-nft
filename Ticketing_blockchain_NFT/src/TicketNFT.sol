@@ -8,7 +8,6 @@ contract TicketNFT is TicketFactory, IERC721 {
     constructor(
         string memory _defaultLocation,
         string memory _defaultName,
-        uint _defaultID,
         uint _defaultDate
     ) TicketFactory(_defaultLocation, _defaultName, _defaultDate) {
     }

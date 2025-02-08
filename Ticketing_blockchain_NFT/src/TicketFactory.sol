@@ -16,9 +16,7 @@ contract TicketFactory {
 
     constructor(string memory _defaultLocation, string memory _defaultName, uint _defaultDate) {
         owner = msg.sender;
-        _myTickets[0].event_name = _defaultName;
-        _myTickets[0].location = _defaultLocation;
-        _myTickets[0].date = _defaultDate;
+        _myTickets.push(myTicket(_defaultName, _defaultLocation, 0, _defaultDate));
     }
 
     function _createTicket() internal returns (uint256) {
