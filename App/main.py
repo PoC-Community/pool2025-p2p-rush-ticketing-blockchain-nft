@@ -3,6 +3,7 @@ from tkinter import messagebox
 import requests
 import json
 from run_command import *
+import qrcode
 
 PINATA_API_KEY = ""
 PINATA_SECRET_API_KEY = ""
@@ -49,7 +50,6 @@ def show_custom_dialog(title, message):
 
     text_widget.pack(padx=10, pady=10)
 
-    # Make text selectable
     text_widget.config(state=tk.NORMAL)
     text_widget.bind("<Button-1>", lambda e: text_widget.focus_set())
     text_widget.config(state=tk.DISABLED)
@@ -125,9 +125,8 @@ def create_event():
         metadata_url = f"https://gateway.pinata.cloud/ipfs/{metadata_cid}"
         show_custom_dialog("Event Created", f"Event '{name}' created!\nNFT Metadata CID: {metadata_cid}\nMetadata URL: {metadata_url}")
 
-        # ------------------------------------------------------------- Deploy Contract
         constructor_args = f'"{loc}" "{name}" "100" "{metadata_cid}" ""'
-        command = f'forge create ./src/TicketMetadata.sol:TicketNFTMetadata --private-key {private_key} --broadcast --constructor-args {constructor_args}'
+        command = f'forge create ./src/TicketMetadata.sol:TicketNFTMetadata --private-key {private_key} --broadcast --rpc-url https://polygon-mainnet.g.alchemy.com/v2/gtpCDpGB3oowNLUHvCfzTU_Cxjm4IGYC --constructor-args {constructor_args}'
 
         stdout, stderr = run_command(command)
         if stderr:
@@ -138,7 +137,7 @@ def create_event():
         create_window.destroy()
 
     submit_button = tk.Button(create_window, text="Create Event", command=submit_event)
-    submit_button.grid(row=5, columnspan=2, pady=10)
+    submit_button.grid(row=6, columnspan=2, pady=10)
 
 def get_ticket_for_event():
     ticket_window = tk.Toplevel(root)
@@ -170,32 +169,37 @@ def get_ticket_for_event():
 
         show_custom_dialog("Success", f"Contract Address: {contract_address_value}\nWallet Address: {wallet_address_value} and private key : {private_key}")
 
-        command = f'cast send {contract_address_value} "mint()" --from {wallet_address_value} --private-key {private_key}'
+        command = f'cast send {contract_address_value} "mint()" --from {wallet_address_value} --private-key {private_key} --rpc-url https://polygon-mainnet.g.alchemy.com/v2/gtpCDpGB3oowNLUHvCfzTU_Cxjm4IGYC'
 
         stdout, stderr = run_command(command)
         if stderr:
             show_custom_dialog("Error", f"Erreur dans la récuperation du billet: {stderr}")
             return
-        show_custom_dialog("Success", f"Billet recuperer avec succes!\n{stdout}")
+        show_custom_dialog("Your Ticket and QR Code:", f"\n{stdout}")
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(wallet_address)
+        qr.make(fit=True)
+        img = qr.make_image(fill="blue", back_color="white")
+
+        img.save("Billet.png")
         ticket_window.destroy()
 
     submit_button = tk.Button(ticket_window, text="Get Ticket", command=submit_ticket_request)
-    submit_button.grid(row=2, columnspan=2, pady=10)
+    submit_button.grid(row=3, columnspan=2, pady=10)
 
-
-def get_qr_code():
-    show_custom_dialog("Get QR Code", "Fonction pour le QR Code.")
 
 root = tk.Tk()
 root.title("Event Management")
 
 btn_create_event = tk.Button(root, text="Create Event", width=20, command=create_event)
-btn_create_event.pack(pady=10)
+btn_create_event.pack(pady=20)
 
 btn_get_ticket = tk.Button(root, text="Get Ticket for Event", width=20, command=get_ticket_for_event)
-btn_get_ticket.pack(pady=10)
-
-btn_get_qr = tk.Button(root, text="Get your QR Code", width=20, command=get_qr_code)
-btn_get_qr.pack(pady=10)
+btn_get_ticket.pack(pady=20)
 
 root.mainloop()
